@@ -11,9 +11,10 @@ const mongoose = require('mongoose');
 const api = require('./routes');
 //=====================================
 const app = express();
-const port = 4000;
 
-app.use(morgan('dev'));
+if(process.env.NODE_ENV !== 'test'){
+    app.use(morgan('dev'));
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -26,8 +27,5 @@ mongoose.connect('mongodb://localhost/node_tdd');
 app.use('/api', api)
 
 //=====================================
-app.listen(port, ()=>{
-    console.log(`express on ${port}`)
-})
 
 module.exports = app;
