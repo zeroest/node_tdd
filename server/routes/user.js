@@ -1,7 +1,7 @@
 const express = require('express');
-const User = require('./../models/user');
-
 const mongojs = require('mongojs');
+const mongoose = require('mongoose');
+const User = require('./../models/user');
 
 const db = mongojs('node_tdd');
 
@@ -123,6 +123,45 @@ router.post('/', (req, res)=>{
     })
 
 
+})
+
+router.put('/:id', (req, res)=>{
+    const id = parseInt(req.params.id, 10);
+    const name = req.body.name;
+    if(Number.isNaN(id)){
+        return res.status(400).end();
+    }
+    if(!name){
+        return res.status(400).end();
+    }
+
+    
+    User.findOne({id}, (err, user)=>{
+        if(err) throw err;
+        
+        if(!user){
+            return res.status(404).end();
+        }
+        
+        User.findOne({name}, (err, user)=>{
+            if(err) throw err;
+    
+            // console.log('==================')
+            // console.log(user)
+            // console.log('==================')
+    
+            if(user){
+                return res.status(409).end();
+            }
+        })
+    
+        user.name = name;
+        
+        user.save((err, user)=>{
+            if(err) throw err;
+            return res.status(201).json(user)
+        })
+    })
 })
 
 module.exports = router;
