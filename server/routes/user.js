@@ -135,32 +135,50 @@ router.put('/:id', (req, res)=>{
         return res.status(400).end();
     }
 
-    
+    function checkName(){
+        return new Promise((resolve, reject)=>{
+            User.findOne({name}, (err, user)=>{
+                if(err) reject(console.error(err));
+        
+                // console.log('==================')
+                // console.log(user)
+                // console.log('==================')
+        
+                if(user){
+                    resolve(true); 
+                }else{
+                    resolve(false);
+                }
+                
+            })
+
+        })
+    }
     User.findOne({id}, (err, user)=>{
         if(err) throw err;
         
         if(!user){
             return res.status(404).end();
         }
-        
-        User.findOne({name}, (err, user)=>{
-            if(err) throw err;
-    
-            // console.log('==================')
-            // console.log(user)
-            // console.log('==================')
-    
-            if(user){
+
+        checkName()
+        .then((result)=>{
+            if(result){
                 return res.status(409).end();
             }
+
+            user.name = name;
+            
+            user.save((err, user)=>{
+                if(err) throw err;
+                return res.status(201).json(user)
+            })
+
         })
-    
-        user.name = name;
-        
-        user.save((err, user)=>{
+        .catch((err)=>{
             if(err) throw err;
-            return res.status(201).json(user)
         })
+
     })
 })
 
