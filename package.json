@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec babel-node --presets=es2015 ./server/main.js --watch server",
-    "test": "mocha server/user.spec.js"
+    "test": "mocha server/routes/user.spec.js"
   },
   "keywords": [],
   "author": "",

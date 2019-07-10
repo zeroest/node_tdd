@@ -1,7 +1,7 @@
 const request = require('supertest');
 const should = require('should');
 
-const app = require('./main');
+const app = require('../main');
 
 // describe('GET /users 는', ()=>{
 //     it('...', (done)=>{
@@ -140,7 +140,7 @@ describe('POST /api/user/', _=>{
 */
 describe('PUT /api/user/:id', _=>{
     describe('성공시', _=>{
-        const name = 'cast'
+        const name = 'kakkakaaakao'
         it('변경된 name을 응답한다.', (done)=>{
             request(app)
             .put('/api/user/9')
