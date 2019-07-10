@@ -15,6 +15,7 @@ const port = 4000;
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 
 const db = mongoose.connection;
 

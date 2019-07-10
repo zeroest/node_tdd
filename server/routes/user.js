@@ -65,8 +65,12 @@ router.delete('/:id', (req, res)=>{
     })
 })
 
-router.post('/createUser', (req, res)=>{
+router.post('/', (req, res)=>{
     let usernameRegex = /^[a-z0-9]+$/;
+
+    if(!req.body.name){
+        return res.status(400).end();
+    }
 
     if(!usernameRegex.test(req.body.name)){
         return res.status(400).json({
@@ -91,8 +95,8 @@ router.post('/createUser', (req, res)=>{
                     },
                     update: {
                         $inc: { seq : 1 }
-                    },
-                    new: true
+                    }
+                    // ,new: true
                 }, (err, data)=>{
                     if(err) reject(console.error(err));
                     
@@ -110,7 +114,7 @@ router.post('/createUser', (req, res)=>{
 
             user.save(err =>{
                 if(err) throw err;
-                return res.json({ success: true })
+                return res.status(201).json(user)
             })
         })
         .catch((err)=>{

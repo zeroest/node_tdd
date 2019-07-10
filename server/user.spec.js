@@ -47,13 +47,13 @@ describe('GET /api/user/ 는', _=>{
 
 });
 
-describe('GET /api/user/8 은', _=>{
+describe('GET /api/user/9 은', _=>{
     describe('성공시', _=>{
-        it('id가 8인 유저 객체를 반환한다.', (done)=>{
+        it('id가 9인 유저 객체를 반환한다.', (done)=>{
             request(app)
-            .get('/api/user/8')
+            .get('/api/user/9')
             .end((err, res)=>{
-                res.body.should.have.property('id', 8);
+                res.body.should.have.property('id', 9);
                 done();
             })
         })
@@ -75,14 +75,14 @@ describe('GET /api/user/8 은', _=>{
 })
 
 describe('DELETE /api/user/8', _=>{
-    describe('성공시', _=>{
-        it('204를 응답한다.', (done)=>{
-            request(app)
-            .delete('/api/user/8')
-            .expect(204)
-            .end(done);
-        })
-    })
+    // describe('성공시', _=>{
+    //     it('204를 응답한다.', (done)=>{
+    //         request(app)
+    //         .delete('/api/user/8')
+    //         .expect(204)
+    //         .end(done);
+    //     })
+    // })
     describe('실패시', _=>{
         it('id가 숫자가 아닐경우 400으로 응답한다.', (done)=>{
             request(app)
@@ -94,6 +94,45 @@ describe('DELETE /api/user/8', _=>{
             request(app)
             .delete('/api/user/1')
             .expect(404)
+            .end(done);
+        })
+    })
+})
+
+describe('POST /api/user/', _=>{
+    describe('성공시', _=>{
+        let name = 'post1'
+        let body;
+        before(done=>{
+            request(app)
+            .post('/api/user')
+            .send({ name })
+            .expect(201)
+            .end((err, res)=>{
+                body = res.body;
+                done();
+            })
+        })
+        it('생성된 유저 객체를 반환한다.', ()=>{
+            body.should.have.property('id');
+        })
+        it('입력한 name을 반환한다.', ()=>{
+            body.should.have.property('name', name)
+        })
+    })
+    describe('실패시', _=>{
+        it('name 파라미터 누락시 400을 반환한다.', (done)=>{
+            request(app)
+            .post('/api/user')
+            .send({name: ''})
+            .expect(400)
+            .end(done);
+        })
+        it('name 중복시 409을 반환한다.', (done)=>{
+            request(app)
+            .post('/api/user')
+            .send({name: "postapi"})
+            .expect(409)
             .end(done);
         })
     })
