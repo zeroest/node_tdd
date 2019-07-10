@@ -7,17 +7,13 @@ const db = mongojs('node_tdd');
 
 const router = express.Router();
 
-router.get('/getUser/:id', (req, res)=>{
+router.get('/:id', (req, res)=>{
     const id = parseInt(req.params.id, 10);
     if(Number.isNaN(id)){
         return res.status(400).end()
     }
-    console.log(id);
 
     User.findOne({id}, (err, user)=>{
-        if(err){
-            return res.status(404).end()
-        }
         if(!user){
            return res.status(404).end() 
         }
@@ -25,7 +21,7 @@ router.get('/getUser/:id', (req, res)=>{
     })
 })
 
-router.get('/allUser', (req,res)=>{
+router.get('/', (req,res)=>{
     req.query.limit = req.query.limit || 10;
     const limit = parseInt(req.query.limit, 10);
     if(Number.isNaN(limit)){
@@ -49,10 +45,29 @@ router.get('/allUser', (req,res)=>{
     }).limit(limit)
 })
 
+router.delete('/:id', (req, res)=>{
+    const id = parseInt(req.params.id, 10);
+    if(Number.isNaN(id)){
+        return res.status(400).end();
+    }
+    
+    User.findOne({id}, (err, user)=>{
+        if(err) throw err;
+
+        if(!user){
+            return res.status(404).end();
+        }
+
+        User.deleteOne({ _id: user._id }, err=>{
+            if(err) throw err;
+            res.status(204).end();
+        })
+    })
+})
+
 router.post('/createUser', (req, res)=>{
     let usernameRegex = /^[a-z0-9]+$/;
 
-    console.log(req.body.name)
     if(!usernameRegex.test(req.body.name)){
         return res.status(400).json({
             error: 'bad username',
