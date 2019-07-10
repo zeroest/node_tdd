@@ -1,14 +1,14 @@
 // let express = require('express');
 // let morgan = require('morgan');
-import express from 'express';
-import morgan from 'morgan';
+const express = require('express');
+const morgan = require('morgan');
 
-import path from 'path';
-import bodyParser from 'body-parser';
+const path = require('path');
+const bodyParser = require('body-parser');
 
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-import api from './routes';
+const api = require('./routes');
 //=====================================
 const app = express();
 const port = 4000;
@@ -28,3 +28,5 @@ app.use('/api', api)
 app.listen(port, ()=>{
     console.log(`express on ${port}`)
 })
+
+module.exports = app;

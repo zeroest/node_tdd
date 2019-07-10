@@ -1,16 +1,41 @@
-import express from 'express';
-import User from './../models/user';
+const express = require('express');
+const User = require('./../models/user');
 
-import mongojs from 'mongojs';
+const mongojs = require('mongojs');
 
 const db = mongojs('node_tdd');
 
 const router = express.Router();
 
+router.get('/getUser/:id', (req, res)=>{
+    const id = parseInt(req.params.id, 10);
+    if(Number.isNaN(id)){
+        return res.status(400).end()
+    }
+    console.log(id);
+
+    User.findOne({id}, (err, user)=>{
+        if(err){
+            return res.status(404).end()
+        }
+        if(!user){
+           return res.status(404).end() 
+        }
+        return res.json(user)
+    })
+})
+
 router.get('/allUser', (req,res)=>{
+    req.query.limit = req.query.limit || 10;
+    const limit = parseInt(req.query.limit, 10);
+    if(Number.isNaN(limit)){
+        return res.status(400).end();
+    }
+
     User.find({},(err, users)=>{
         if(err) throw err;
         
+
         if(!users){
             return res.status(401).json({
                 error: "something error in server",
@@ -21,7 +46,7 @@ router.get('/allUser', (req,res)=>{
         return res.json(
             users
         )
-    })
+    }).limit(limit)
 })
 
 router.post('/createUser', (req, res)=>{
@@ -43,46 +68,42 @@ router.post('/createUser', (req, res)=>{
                 code: 2
             })
         }
-    function getSeq(){
-        return new Promise((resolve, reject)=>{
-            db.seq.findAndModify({
-                query: {
-                    _id: "user"
-                },
-                update: {
-                    $inc: { seq : 1 }
-                },
-                new: true
-            }, (err, data)=>{
-                if(err) reject(console.error(err));
-                
-                resolve(data.seq)
-                console.log(data.seq + "===================")
-                console.log(data.seq + "this is in result")
-                console.log(data.seq + "===================")
-            })
-        });
-    }
+        function getSeq(){
+            return new Promise((resolve, reject)=>{
+                db.seq.findAndModify({
+                    query: {
+                        _id: "user"
+                    },
+                    update: {
+                        $inc: { seq : 1 }
+                    },
+                    new: true
+                }, (err, data)=>{
+                    if(err) reject(console.error(err));
+                    
+                    resolve(data.seq)
+                })
+            });
+        }
     
-    getSeq()
-    .then((seq)=>{
-        console.log(seq + "success!!!!")
-        let user = new User({
-            id: seq,
-            name: req.body.name
-        })
+        getSeq()
+        .then((seq)=>{
+            let user = new User({
+                id: seq,
+                name: req.body.name
+            })
 
-        user.save(err =>{
-            if(err) throw err;
-            return res.json({ success: true })
+            user.save(err =>{
+                if(err) throw err;
+                return res.json({ success: true })
+            })
         })
-    })
-    .catch((err)=>{
-        console.lerror(err);
-    })
+        .catch((err)=>{
+            console.lerror(err);
+        })
     })
 
 
 })
 
-export default router;
+module.exports = router;
