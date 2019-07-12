@@ -75,14 +75,14 @@ describe('GET /api/user/9 은', _=>{
 })
 
 describe('DELETE /api/user/8', _=>{
-    // describe('성공시', _=>{
-    //     it('204를 응답한다.', (done)=>{
-    //         request(app)
-    //         .delete('/api/user/8')
-    //         .expect(204)
-    //         .end(done);
-    //     })
-    // })
+    describe('성공시', _=>{
+        it('204를 응답한다.', (done)=>{
+            request(app)
+            .delete('/api/user/16')
+            .expect(204)
+            .end(done);
+        })
+    })
     describe('실패시', _=>{
         it('id가 숫자가 아닐경우 400으로 응답한다.', (done)=>{
             request(app)
@@ -98,10 +98,10 @@ describe('DELETE /api/user/8', _=>{
         })
     })
 })
-/*
+
 describe('POST /api/user/', _=>{
     describe('성공시', _=>{
-        let name = 'post1'
+        let name = 'post321'
         let body;
         before(done=>{
             request(app)
@@ -137,10 +137,10 @@ describe('POST /api/user/', _=>{
         })
     })
 })
-*/
+
 describe('PUT /api/user/:id', _=>{
     describe('성공시', _=>{
-        const name = 'kakkakaaakao'
+        const name = 'talktome123'
         it('변경된 name을 응답한다.', (done)=>{
             request(app)
             .put('/api/user/9')
