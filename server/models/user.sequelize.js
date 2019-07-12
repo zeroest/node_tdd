@@ -1,15 +1,15 @@
-const Sequalize = require('sequalize');
-const sequalize = new Sequalize({
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: './db.sqlite'
+    storage: '../db.sqlite'
 })
 
-const User = sequalize.define('User', {
-    id: Sequalize.INTEGER,
-    name: Sequalize.STRING
+const User = sequelize.define('User', {
+    //_id: Sequelize.INTEGER,
+    name: Sequelize.STRING
 })
 
-module.exports = { Sequalize, sequalize, User };
+module.exports = { Sequelize, sequelize, User };
 
 /*
 const Sequalize = require('sequalize');
